@@ -4,12 +4,14 @@ const path = require('path');
 const mime = require('mime');
 const cache = {};
 
+// Helper function
 function send404(response) {
 	response.writeHead(404, {'Content-Type': 'text/plain'});
 	response.write('Error 404: resource not found.');
 	response.end();
 }
 
+// Helper function
 function sendFile(response, filePath, fileContents) {
 	response.writeHead(
 		200, 
@@ -18,6 +20,7 @@ function sendFile(response, filePath, fileContents) {
 	response.end(fileContents);	
 }
 
+// Helper function
 function serveStatic(response, cache, absPath) {
 	if (cache[absPath]){
 		sendFile(response, absPath, cache[absPath]);
@@ -39,7 +42,7 @@ function serveStatic(response, cache, absPath) {
 	}
 }
 
-const server = http.createServer(function(request, response){
+const server = http.createServer(function(request, response) {
 	let filePath = false;
 	if(request.url === '/') {
 		filePath = 'public/index.html';
@@ -48,12 +51,11 @@ const server = http.createServer(function(request, response){
 	}
 	let absPath = './' + filePath;
 	serveStatic(response, cache, absPath);
-	
 });
 
 server.listen(3000, function() {
 	console.log("Server listening on port 3000.");
 });
 
-const chatServer = require('./lib/chatServer');
+const chatServer = require('./lib/chat-server');
 chatServer.listen(server);
